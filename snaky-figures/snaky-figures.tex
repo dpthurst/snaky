@@ -1,0 +1,178 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.9cm,top=1.8cm,bottom=1.8cm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{url}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\titlespacing*{\section}{0pt}{12pt}{4pt}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.7em}{}
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+\newcommand{\fig}[2]{\begin{center}\includegraphics[width=0.97\textwidth]{#1}\\[2pt]
+{\small\captionof{figure}{#2}}\end{center}}
+\newcommand{\Snaky}{S}
+\newcommand{\Z}{\mathbb{Z}}
+\definecolor{deep}{RGB}{23,69,110}
+\definecolor{piv}{RGB}{217,95,2}
+\definecolor{ok}{RGB}{46,125,79}
+\definecolor{brk}{RGB}{165,24,42}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Snaky in 21 Maker moves}\\[2pt]
+{\large figures for the overall strategy}\\[8pt]
+{\small Companion to OpenAI, \emph{Snaky in 21 Maker moves}, 25 September 2026.\\
+\url{https://github.com/openai/math/blob/main/preprints/Snaky-in-21-Maker-moves-September-25-2026/article.pdf}}
+\end{center}
+
+\vspace{-2pt}
+\section*{The claim, and the shape of the argument}
+
+Maker plays first on the empty infinite square grid; Maker and Breaker alternately claim one
+unclaimed cell, ownership is permanent, and Maker wins by owning all six cells of
+\[
+\Snaky=\{(0,0),(1,0),(2,0),(3,0),(3,1),(4,1)\}
+\]
+up to translation, reflection and quarter turn. The paper proves that one fixed Maker policy
+does this within $21$ Maker claims against every Breaker play. Here is the spine of the proof,
+in the order the figures present it.
+
+\textbf{One notion.} A \emph{card} is a triple $(A,T,h)$ with finite $A\subseteq T\subset\Z^2$ and
+$h\ge 1$. It is a promise: \emph{at every position with Maker to move, if Maker owns $A$ and
+Breaker owns nothing in $T$, Maker has already won or can win within $h$ further claims.}
+Nothing is said about how the position arose; extra Maker cells are free, and Breaker stones
+outside $T$ are irrelevant. This indifference to history is what lets cards be composed.
+
+\textbf{One rule.} Given cards $(A_i,T_i,h_i)$ and a pivot $p$, put
+\[
+A=\Big(\bigcup_i A_i\;\cup\;\bigcap_i T_i\Big)\setminus\{p\},
+\qquad
+T=\{p\}\cup\bigcup_i T_i,
+\qquad
+h=1+\max_i h_i .
+\]
+Maker claims $p$ (if $p$ is already owned, Maker claims any free cell instead --- a real move,
+and it is counted). Afterwards Maker owns every $A_i$ and the whole common part $\bigcap_i T_i$.
+Breaker's single reply $b$ cannot lie in every $T_i$, so some child keeps its envelope Breaker-free,
+and that child delivers the win within $h-1$ further claims. One stone, one surviving child:
+that is the entire mechanism.
+
+\textbf{One finite object.} Start from the six one-hole copies of $\Snaky$ (height $1$) and apply
+the rule $722$ times, in a fixed order, placing each card by a signed permutation and a
+translation. The last card needs nothing: $A_{727}=\varnothing$, $|T_{727}|=251$,
+$T_{727}\subseteq\{0,\dots,16\}^2$, $h_{727}=21$. With no hypothesis to verify, the promise
+holds on the empty board.
+
+\textbf{One descent.} Playing the strategy means walking down that tree: claim the pivot, let
+Breaker block one child, follow a surviving one. Each step costs exactly one Maker claim and
+lowers the height by one, so the game ends within $21$ claims --- and, because the choices are
+fixed in advance, against every Breaker.
+
+Figure~0 is that paragraph as a picture; the remaining figures take the four parts in turn.
+
+\fig{figures/fig0.pdf}{The strategy in one line. Left: the leaves of the construction are the six
+one-hole copies of $\Snaky$. Middle: the only rule used anywhere in the proof --- Maker owns
+the children's requirements and their common part, and one Breaker stone leaves a child intact.
+Right: the card reached at the top of the construction, and a play of it. The construction is
+done offline; the game is the descent.}
+
+\section{The target, and why orientation is free}
+
+Everything is invariant under the eight signed permutation matrices: a target is $t+R(\Snaky)$
+for $R$ among them. The certificate uses exactly this freedom to line shapes up --- every
+reference in the data carries one of the eight codes $s=0,\dots,7$ and a translation.
+
+\fig{figures/fig1.pdf}{The six cells of $\Snaky$, indexed by the lower-left corner of the cell, and
+the eight orientations, written in the paper's encoding. Any translate of any of these eight is a
+win, so a maker policy may choose its orientation in advance and may switch between them
+during play.}
+
+\section{Cards, and the only step in the proof}
+
+Figure~2 shows the rule twice: abstractly, and on the first two cards that use it. Card~6 is a
+fork --- Maker owns a column of five, claims the cell beside its middle, and threatens two
+distinct completions, only one of which Breaker can take. Card~7 stacks two placed copies of
+card~6 whose envelopes overlap in a common column; the intersection of the two envelopes is
+that column, so after the pivot $(0,5)$ is removed the requirement shrinks to four cells while
+the height grows to $3$. This is the composition pattern repeated $722$ times.
+
+\fig{figures/fig2.pdf}{(a) The rule: Maker claims $p$; the requirements $A_i$ and the whole
+intersection $\bigcap_i T_i$ become Maker's; one Breaker stone $b$ misses some envelope. (b) Card
+$6$, drawn from the certificate data: dark cells are required, the orange square is the pivot
+$(1,4)$, the green squares are the two completions. Breaker can occupy at most one of them.
+(c) Card $7$ is two placed copies of card $6$ (grey dashed) whose envelopes share the column
+$x=0$; the pivot $(0,5)$ is claimed and the shared column falls out as the new requirement.}
+
+\section{The whole certificate at once}
+
+The data are $728$ cards: the six bases plus $722$ numbered lines, each one application of the
+rule, with $1{,}620$ combination nodes in all. Two trends are visible and both matter. As the
+height grows, envelopes grow --- a card that promises a win in many moves must be protected
+against Breaker stones arriving in the meantime, so it needs a large Breaker-free region. And
+required sets shrink, down to the empty set at the top: the higher a card is, the less it assumes
+about what Maker has already built.
+
+\fig{figures/fig3.pdf}{All $728$ cards. (a) Envelope size against height: from the six six-cell
+bases up to the $251$-cell envelope of card $727$. (b) Required-set size against height, falling
+to zero. (c) How many cards sit at each height: a pyramid whose apex is the single card $727$.}
+
+\section{How the top of the tree closes}
+
+The last line of the certificate is a single combination with $32$ placed children, drawn from
+six earlier cards in four or eight placements each. Every child requires exactly the cell
+$(8,8)$, and the intersection of all $32$ envelopes is exactly $\{(8,8)\}$. So Maker plays the
+pivot, and the common part terminates: the union of the requirements is the pivot, the pivot is
+deleted, and $A_{727}=\varnothing$. What is left of the six-way choice is the geometry --- the
+common part of the envelopes is peeled away group by group, from $35$ cells down to none.
+
+\fig{figures/fig4.pdf}{The $32$ children of card $727$, grouped by the card they come from.
+Light cells: one placed envelope from the group. Dark cells: those still common to every
+envelope listed so far --- $35,31,21,12,4$ cells, then none. The envelopes share exactly the
+pivot $(8,8)$ (orange), so after that claim the last card requires nothing, on a board of
+$251$ cells inside $\{0,\dots,16\}^2$.}
+
+\section{Playing it}
+
+Fix an enumeration of the grid and the printed order of every child list. At a card, claim its
+pivot; if Maker already owns it, claim the first free cell instead. Stop the moment a copy is
+complete. After Breaker's reply, move to the first child whose placed envelope avoids that
+cell. The height drops by one at each step, and the pivot of the card reached is the next claim.
+Figure~5 is one such play, against a Breaker that greedily blocks as many child envelopes as
+possible at each step. In the plays we simulated the descent always finished early --- six to
+eight claims against two hundred randomised breakers and against a greedy one --- so the figure
+shows the mechanism rather than the worst case.
+
+\fig{figures/fig5.pdf}{One legal play. Shading: how long each cell stays inside the active envelope
+(the darker, the longer). Outlines: the active envelope at each level, $251\to169\to40\to25\to11
+\to8\to6$ cells, with height $21\to20\to10\to9\to3\to2\to1$. Numbered dots are Maker's claims,
+crosses are Breaker's replies, and the green outline is the copy completed on move $7$.}
+
+\section*{What the figures do not show}
+
+The paper also gives a $25$-move construction with reduced envelopes and an explicit opening
+cover, a $35$-move construction with four conditional interfaces, and a separate local result
+(four stones in a row win against at most three nearby blockers). None of that is drawn here;
+the three constructions share the rule of Figure~2 and differ in what they record. Nor do the
+figures replace the argument: they are a reading aid for Definitions~2, Lemma~3 and the
+$21$-move certificate.
+
+\section*{How these figures were checked}
+
+The geometry in Figures~2, 4 and 5 is not drawn by hand. The certificate file distributed with
+the paper (\texttt{verification/certificate.txt}, SHA-256
+\texttt{3fa12d36\ldots e3d04}) was verified with the paper's own checker and then re-parsed
+independently: all $728$ cards, their sets and heights were recomputed from the rule, matching
+$|T_{727}|=251$, $h_{727}=21$ and the intermediate values of Table~1. Figure~4 uses the
+placed children of the last line; Figure~5 comes from simulating the Section~4 policy, with the
+invariant of Definition~2 (Breaker avoids the active envelope, Maker owns its requirement)
+checked at every step, against $200$ randomised breakers and a greedy one.
+
+\end{document}

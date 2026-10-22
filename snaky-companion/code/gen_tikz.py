@@ -66,8 +66,9 @@ def fig_play(path_out='fig-play.tex'):
     L.append(r"""\node[anchor=south west,font=\footnotesize] at (18.0,16.6) {the active envelope};
 \node[anchor=south west,font=\footnotesize] at (18.0,15.3) {after each claim,};""")
     y0 = 14.0
+    pitch = 1.15      # legend rows: 4.5mm unit, 8pt text
     for i, e in enumerate(log):
-        y = y0 - i * 1.0
+        y = y0 - i * pitch
         L.append('\\draw[%s,line width=.7pt] (18.0,%s)--(19.4,%s);'
                  '\\node[right,font=\\footnotesize] at (19.6,%s) {$h=%d$, %d cells};'
                  % (STYLES[i], fmt(y), fmt(y), fmt(y), e['h'], e['size']))
@@ -138,12 +139,9 @@ def fig_topcard(path_out='fig-top-card.tex'):
         L.append(cellfill(placed[i][0], 'gray!22'))
         L.append(dotfill(running[i] - {(8, 8)}))
         L.append('\\filldraw[fill=gray!60] (7.72,7.72) rectangle (8.28,8.28);')
-        L.append('\\node[below,font=\\footnotesize] at (8,-.9) '
-                 '{card %d \\ (%d placements)};' % (j, len(ks)))
-        L.append('\\node[below,font=\\footnotesize,yshift=-3.1mm] at (8,-.9) '
-                 '{%s};' % ('$35,31,21,12,4$ and $0$ cells still common'.split(',')[i].replace('$', '')
-                            if False else '$%d$ cells still common' % remaining[i]
-                            if i < 5 else 'only $(8,8)$ remains'))
+        note = ('$%d$ cells still common' % remaining[i]) if i < 5 else 'only $(8,8)$ remains'
+        L.append('\\node[below,font=\\footnotesize,align=center] at (8,-.9) '
+                 '{card %d \\ (%d placements)\\\\[-1pt] %s};' % (j, len(ks), note))
         L.append('\\end{scope}')
     L.append(r"""\end{tikzpicture}
 \caption{The $32$ children of card $727$, grouped by the card they come from;
@@ -184,10 +182,8 @@ def fig_landscape(path_out='fig-landscape.tex'):
                  % (val * CA, val * CA, val))
     for k in (1, 5, 10, 15, 20, 21):
         L.append('\\draw (%.1f,-.8)--(%.1f,-2.2) node[below,font=\\scriptsize] {%d};' % (k, k, k))
-    L.append('\\node[below,font=\\footnotesize] at (11,-4.2) {height $h$};')
+    L.append('\\node[below,font=\\footnotesize] at (11,-11) {height $h$};')
     L.append('\\node[font=\\footnotesize] at (11,%.2f) {cards};' % (106 * CA + 8))
-    L.append('\\node[font=\\scriptsize,anchor=west] at (1.6,%.2f) {six bases};' % (6 * CA + 1.5))
-    L.append('\\node[font=\\scriptsize,anchor=west] at (12.5,%.2f) {card $727$};' % (1 * CA + 1.5))
     L.append('\\end{scope}')
     # ---- (b) largest envelope per height
     L.append('\\begin{scope}[xshift=6.1cm]')
@@ -202,10 +198,10 @@ def fig_landscape(path_out='fig-landscape.tex'):
                  % (val * CB, val * CB, val))
     for k in (1, 5, 10, 15, 20, 21):
         L.append('\\draw (%.1f,-.8)--(%.1f,-2.2) node[below,font=\\scriptsize] {%d};' % (k, k, k))
-    L.append('\\node[below,font=\\footnotesize] at (11,-4.2) {height $h$};')
+    L.append('\\node[below,font=\\footnotesize] at (11,-11) {height $h$};')
     L.append('\\node[font=\\footnotesize] at (11,%.2f) {cells};' % (265 * CB + 8))
-    L.append('\\node[font=\\scriptsize,anchor=west] at (1.5,%.2f) {$6$};' % (6 * CB))
-    L.append('\\node[font=\\scriptsize,anchor=east] at (20.4,%.2f) {$251$};' % (251 * CB - 4))
+    L.append('\\node[font=\\scriptsize,below right] at (1.1,%.2f) {$6$};' % (6 * CB))
+    L.append('\\node[font=\\scriptsize,above] at (21,%.2f) {$251$};' % (251 * CB + 3))
     L.append('\\end{scope}')
     L.append(r"""\end{tikzpicture}
 \caption{The certificate as a whole. Left, the number of cards at each height: a

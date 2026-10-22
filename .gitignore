@@ -1,0 +1,26 @@
+# LaTeX build products
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+
+# Built documents
+snaky-companion/snaky-companion.pdf
+snaky-figures/snaky-figures.pdf
+
+# Rendered figures, written by make_figures.py
+snaky-figures/figures/*.pdf
+snaky-figures/figures/*.png
+snaky-companion/preview-pages/
+
+# Python
+__pycache__/
+*.pyc
+
+# Intermediates written by code/labelcheck/ and by make_figures.py
+snaky-companion/code/labelcheck/v[AB].*
+snaky-companion/code/labelcheck/v[AB]-*.png
+snaky-companion/code/out/

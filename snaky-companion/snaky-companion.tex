@@ -1,0 +1,256 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.1cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Snaky}{S}
+\newcommand{\paper}{\emph{Snaky in 21 Maker moves}}
+\setlength{\parskip}{3.5pt}
+\setlength{\parindent}{0pt}
+\newcommand{\head}[1]{\vspace{4pt}\noindent\textbf{#1}\quad}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries A companion to \emph{Snaky in 21 Maker moves}}\\[6pt]
+{\large how the proof works, in figures}\\[8pt]
+{\small OpenAI, \emph{Snaky in 21 Maker moves}, 25 September 2026\\
+\url{https://github.com/openai/math/tree/main/preprints/Snaky-in-21-Maker-moves-September-25-2026}}
+\end{center}
+
+\vspace{-4pt}
+
+This companion follows the preprint \paper{} and supplies the pictures its text
+implies but does not draw: the combination rule as a diagram, the certificate as
+a whole, the last card, and one play. It is not needed to check the proof, and it
+changes nothing in the paper: every numbered reference below --- Definition~2,
+Lemma~3, Proposition~5, Section~4 --- is to the paper as published. Section~7
+says how the figures and the small computational claims in this text were
+produced.
+
+\section{The game, the claim, the shape}
+
+Maker and Breaker alternately claim one cell of $\Z^2$, Maker first, and ownership
+is permanent. Maker wins as soon as its cells contain a copy of
+\[
+\Snaky=\{(0,0),(1,0),(2,0),(3,0),(3,1),(4,1)\}
+\]
+under any translation, reflection or quarter turn; Breaker need never build
+anything itself. The theorem is that one Maker policy wins against every legal
+Breaker play within $21$ Maker claims. Corollary~6 sharpens the board as well:
+the same policy confines its claims to a fixed set of $251$ cells, so the game is
+already won on a $17\times17$ square.
+
+The quantifiers matter, because the paper proves $\exists\sigma\,\forall\beta$ and
+nothing weaker: the policy $\sigma$ is fixed in advance, and the bound holds for
+every sequence $\beta$ of legal Breaker replies, including replies the policy
+never anticipated. Everything below is in service of that order of quantifiers.
+
+\input{figures/fig-target}
+
+\section{Cards: the only objects the proof uses}
+
+The paper never reasons about a position directly. It reasons about a
+\emph{card}, a triple $(A,T,h)$ of finite sets $A\subseteq T\subset\Z^2$ and an
+integer $h\ge1$, which is a promise:
+
+\begin{quote}
+at every position with Maker to move at which Maker owns $A$ and Breaker owns
+nothing in $T$, Maker has already completed a copy or can complete one within $h$
+further Maker claims.
+\end{quote}
+
+This is Definition~2 of the paper, and three features of it do all the work.
+First, it constrains only $A$ and $T$: extra Maker cells are free, and Breaker
+cells outside $T$ are irrelevant. Second, it says nothing about how the position
+was reached --- no assumption on the sizes of $M$ and $B$, no assumption that the
+cells of $A$ were claimed consecutively, or that they are near each other. Third,
+it counts only \emph{future} Maker claims. A card is therefore portable: any
+placement $F$ --- a signed permutation of the coordinates followed by a
+translation, one of the eight of Figure~1 --- carries a valid card to a valid one
+with the same height.
+
+The paper's figures are all of this kind: dots for the cells that must already be
+Maker's, a small square for the next cell to claim, circles or crosses for the
+cells the argument turns on.
+
+\section{The one step: combining at a pivot}\label{sec:pivot}
+
+Every one of the $722$ numbered lines of the certificate is a single application
+of one lemma. Lemma~3 of the paper: given valid claims $(A_i,T_i,h_i)$,
+$1\le i\le r$, and a cell $p$, the triple below --- equation~(2) of the paper,
+numbered~(1) here --- is again a valid claim, where
+\begin{equation}\label{eq:combination}
+T=\{p\}\cup\bigcup_{i=1}^{r}T_i,\qquad
+A=\Big(\bigcup_{i=1}^{r}A_i\ \cup\ \bigcap_{i=1}^{r}T_i\Big)\setminus\{p\},
+\qquad h=1+\max_i h_i .
+\end{equation}
+Why: Maker claims $p$ (if $p$ is already Maker's, any free cell instead --- a real
+move, and it is counted). Because $p\in T$ and Breaker avoids $T$, Breaker does
+not own $p$. After that single claim Maker owns every $A_i$ and the whole common
+part $\bigcap_iT_i$, so \eqref{eq:combination} holds. Breaker's one reply $b$
+cannot lie in every $T_i$, since it is not in their intersection; choose a child
+with $b\notin T_i$, and the older Breaker stones avoid $T_i$ because
+$T_i\subseteq T$. That child is intact and delivers the win in $h_i\le h-1$
+further claims. One stone, one surviving child: this is the whole mechanism.
+
+\head{What a pivot is.} The paper names $p$ the \emph{pivot} from Section~3
+onwards --- the data carry ``a pivot coordinate'' per line, Table~1 records that
+all the children's requirements become ``the pivot'', and Section~4 has Maker
+``claim its placed pivot $F(p)$'' --- but the lemma itself only says
+``let $p\in\Z^2$''. The usage is uniform
+enough to define:
+
+\begin{quote}
+\textbf{Definition (pivot; reconstruction).} Let $(A_i,T_i,h_i)$, $1\le i\le r$,
+be valid claims and $p\in\Z^2$. In an application of \eqref{eq:combination} the
+cell $p$ is the \emph{pivot} of the application and $(A,T,h)$ is the
+\emph{combination} of the claims at that pivot. A placement $F$ carries the pivot
+to the \emph{placed pivot} $F(p)$.
+\end{quote}
+
+I call this a reconstruction because it is not in the paper: it is the definition
+the later usage requires. It is also where the word earns its name. The pivot is
+useful exactly when it lies in every child envelope: then the claim at $p$ makes
+$\bigcup_iA_i\cup\bigcap_iT_i$ Maker's, the entire common part becomes Maker
+property, and \eqref{eq:combination} deletes $p$ from the requirement. If
+$p\notin\bigcap_iT_i$ the lemma stays true, but no cell of the intersection is
+gained and the combination is no easier to reach than its children.
+
+In the certificate something stronger is true, and it is checkable by machine. All
+$1{,}620$ combination nodes of the $21$-move construction --- the $722$ line
+roots together with the $898$ inline expressions --- have $p\in\bigcap_iA_i$: the
+pivot lies in every child's \emph{required} set, not merely in every envelope.
+Each child already demands the cell Maker is about to claim, so that one claim
+discharges part of every child's requirement simultaneously, and the children
+differ only in what else they need. At card $727$ this is at its sharpest: all
+$32$ placed children require exactly the pivot, and nothing else.
+
+\input{figures/fig-combination}
+
+\section{Building the certificate}
+
+The leaves are Lemma~4: for each $j<6$, the five cells $S\setminus\{s_j\}$ with
+envelope $S$ and height $1$ form a valid claim --- Maker owns a copy of $\Snaky$
+but for one cell, so one claim finishes it.
+
+From there the construction is mechanical. A line of the certificate gives a card
+number, a pivot coordinate in a two-character alphabet (each character is one
+coordinate, $0$--$9$ then $A$--$G$), and a list of children; a child is a
+reference ``$j{:}sUV$'' to an earlier card $j$ placed by the signed permutation
+$s$ and the translation $UV$, or a parenthesised combination of such children in
+the same frame. Card $727$ has $32$ placed children drawn from six earlier cards.
+Proposition~5 records the endpoint: $728$ cards, heights at most $21$,
+$p_{727}=(8,8)$, $A_{727}=\varnothing$, $|T_{727}|=251$ and
+$T_{727}\subseteq\{0,\dots,16\}^2$.
+
+Two trends run through the list, and both are necessary. Heights grow by one per
+level, so a card high in the list promises a win in many moves; to be worth
+anything it must keep Breaker out of a large region for that long, and its
+envelope grows with it, up to the $251$ cells of card $727$. Requirements run the
+other way: the higher a card sits, the less it assumes about what Maker has
+already built, ending at the empty set. Figure~3 shows both.
+
+\input{figures/fig-landscape}
+
+The last line is where the construction closes, and Table~1 of the paper is its
+bookkeeping. The $32$ children come in six groups of four or eight placements.
+Every placed child requires exactly $(8,8)$, and the intersection of all $32$
+placed envelopes is exactly $\{(8,8)\}$: the common part of the envelopes loses
+$35,31,21,12,4$ cells as the groups are added, and then nothing is left. So in
+\eqref{eq:combination} the union of the requirements and the intersection are the
+same singleton, and deleting the pivot leaves $A_{727}=\varnothing$. Figure~4 is
+Table~1 drawn.
+
+\input{figures/fig-top-card}
+
+\section{Playing it}
+
+Turning the certificate into a policy (Section~4 of the paper) needs two arbitrary
+choices, both fixed before play: an enumeration of the board, and the printed
+order of every child list. The policy then reads: at the active card, claim its
+placed pivot $F(p)$; if Maker already owns it, claim the first free cell of the
+enumeration instead; stop the moment a copy is complete. After Breaker's reply,
+move to the first child whose placed envelope avoids that cell --- Lemma~3
+guarantees one exists --- and remember the new placement $F\circ G$ if the child
+was a reference.
+
+Each non-terminal step spends exactly one Maker claim and strictly lowers the
+height, so play ends within $21$ claims; and since the active card is recovered by
+replaying the prescribed choices, the policy is a single function of the history,
+determined without seeing any future move. That is the $\exists\sigma\forall\beta$
+form: extend the policy past a win by fresh moves, and the Maker set after claim
+$21$ contains a copy whenever the first $20$ Breaker replies were legal.
+
+\input{figures/fig-play}
+
+Figure~5 is one play of exactly this policy, against a Breaker that always blocks
+as many child envelopes as possible. It is worth reading with the caption: the
+outer envelope is the $251$-cell board, each claim is the pivot of the card
+reached, and the envelope contracts $251\to169\to40\to25\to11\to8\to6$ as the
+height falls $21\to20\to10\to9\to3\to2\to1$. The copy is complete on claim $7$.
+
+\section{What this companion does not cover}
+
+The paper gives three complete constructions. This one --- the certificate above,
+with the $21$-move bound --- is the sharpest and the one that closes with no
+required cells at all; the $25$-move construction of Appendix~A records reduced
+envelopes and needs an explicit opening cover for five exceptional first replies,
+and the $35$-move construction of Appendix~B supplies four conditional strategies
+stated at arbitrary positions. All three use the rule of Section~3 and differ in
+what they carry; only the first is drawn here. Section~5 of the paper proves a
+separate local statement, that four Maker stones in a row win against at most
+three nearby Breaker stones, which explains the geometry behind the threats
+without being needed for the bound. The appendices print the certificate data, and
+the verification programs of Section~6 and Appendix~G check the finite
+reconstruction.
+
+\section{How the figures were made and checked}
+
+None of the geometry is drawn by hand. The file
+\texttt{verification/certificate.txt} distributed with the paper was checked
+against the SHA-256 that Section~6.2 states, and then parsed again independently:
+all $728$ cards were recomputed from Definition~2 and \eqref{eq:combination},
+reproducing $|T_{727}|=251$, $h_{727}=21$ and the intermediate values of Table~1
+--- including the running intersection of Figure~4, which loses
+$35,31,21,12,4,0$ cells. Figures~2--5 are drawn from those recomputed sets.
+
+Figure~5 is a simulation of the Section~4 policy, with the invariant of
+Definition~2 --- Breaker owns nothing in the active envelope, Maker owns the whole
+required set --- asserted at every step. Over two hundred randomised Breaker
+strategies and one greedy one, every play finished in six to eight claims; the
+figure shows a representative one, not the worst case.
+
+The claim about pivots in Section~3 was checked the same way: over all $1{,}620$
+combination nodes, the pivot lay in every child's required set, with no exception.
+Both programs are in \texttt{code/} and need only the certificate file.
+
+
+\vspace{6pt}
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+in the paper & what it does & figure here \\
+\midrule
+\S1 & the game, the theorem, earlier work & Figure 1 \\
+\S2 & Definition 2, Lemma 3, Lemma 4 & Figures 1, 2 \\
+\S3 & the certificate, Proposition 5, Table 1 & Figures 3, 4 \\
+\S4 & the policy and its move count & Figure 5 \\
+\S5 & four in a row, Proposition 7 & --- \\
+\S6 & exact reconstruction and its scope & --- \\
+App.~A, B & the 25- and 35-move constructions & --- \\
+App.~D--F & the certificate data & --- \\
+App.~G & the verification programs & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

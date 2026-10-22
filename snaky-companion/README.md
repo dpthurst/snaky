@@ -26,6 +26,13 @@ as a quotation — and then the property that makes it worth having: over all 1,
 nodes of the certificate, the pivot lies in every child's *required* set, not merely in every
 envelope. `code/check_pivots.py` verifies that (`PASS`, 0 exceptions).
 
+`code/check_symmetry.py` answers the question a simplification will ask: how many
+distinct cases does a certificate really contain? On the printed certificate the answer is
+728 of 728 --- no two cards are congruent, because symmetry is already spent as placement
+(each card is proved once and referenced in up to eight orientations, 4,089 references in
+all). Run it on a new certificate and it lists any classes holding more than one card;
+those are the merge candidates.
+
 ## Files
 
 ```
@@ -35,6 +42,7 @@ figures/fig-*.tex       the five TikZ figures, each a complete float environment
 code/gen_tikz.py        regenerates four of the figures from the certificate
 code/make_figures.py    runs that, writing figures/fig-*.tex
 code/check_pivots.py    the 1,620-node pivot check
+code/check_symmetry.py  cards modulo the eight symmetries: how many distinct cases a certificate has
 code/{snakylib,check,trace,sim}.py   certificate parser and the played game
 code/certificate.txt    the file distributed with the paper (byte-identical)
 preview-pages/          the six pages as grayscale PNGs

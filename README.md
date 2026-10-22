@@ -45,7 +45,10 @@ trusting the paper's own verifier: they reproduce `|T727| = 251`, `h727 = 21` an
 `35, 31, 21, 12, 4, 0` column of Table 1. The played game in the companion is a simulation of
 the Section 4 policy with the invariant of Definition 2 asserted at every step, and
 `snaky-companion/code/check_pivots.py` verifies the claim that every pivot of the certificate
-lies in every child's required set — 1,620 combination nodes, no exceptions.
+lies in every child's required set — 1,620 combination nodes, no exceptions — and
+`snaky-companion/code/check_symmetry.py` counts the distinct cases of a certificate modulo
+the eight signed permutations and translations. On the printed one that count is 728 of 728:
+symmetry is already spent as placement, so a symmetry quotient would not shorten the proof.
 
 ## Licence
 

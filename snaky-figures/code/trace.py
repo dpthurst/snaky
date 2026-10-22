@@ -2,7 +2,7 @@ import snakylib as sl
 from sim import comp, apply, apply1, ID, has_target, SHAPES
 
 class World:
-    def __init__(self, path='certificate.txt'):
+    def __init__(self, path=None):
         self.cards, self.trees = sl.load(path)
 
     # --- node data -------------------------------------------------------

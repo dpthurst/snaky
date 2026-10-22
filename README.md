@@ -15,7 +15,8 @@ a changed copy of it.
 | `snaky-figures/` | earlier piece. A five-figure reading guide rendered with matplotlib, as PDF and PNG, with the short prose that goes with it. |
 
 Each folder has its own README with the details, and `code/` with everything needed to
-regenerate the figures.
+regenerate the figures. Only sources are tracked: the built PDFs and the rendered PNGs are
+outputs of the commands below, and both folders build from a fresh clone.
 
 ## Building
 
@@ -27,8 +28,8 @@ latexmk -pdf snaky-companion.tex  # needs tikz, booktabs, float
 
 ```sh
 cd snaky-figures
-cd code && python3 make_figures.py   # writes code/out/fig*.{pdf,png}
-cd .. && latexmk -pdf snaky-figures.tex
+python3 code/make_figures.py      # writes figures/fig*.{pdf,png}
+latexmk -pdf snaky-figures.tex
 ```
 
 ## Where the numbers come from

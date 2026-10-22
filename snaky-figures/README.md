@@ -37,10 +37,11 @@ claims; the figure shows a representative one.
 ## Rebuilding
 
 ```sh
-cd code && python3 make_figures.py      # writes code/out/fig{0..5}.{pdf,png}
-cp out/fig*.pdf out/fig*.png ../figures/
-cd .. && latexmk -pdf snaky-figures.tex
+python3 code/make_figures.py      # writes figures/fig{0..5}.{pdf,png}
+latexmk -pdf snaky-figures.tex
 ```
+
+The rendered figures and the built guide are not tracked; this regenerates them.
 
 Requires Python 3 with matplotlib and Pillow, and a LaTeX installation with `latexmk`.
 The certificate file is needed only by the figure scripts, never by the PDF.
